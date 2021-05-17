@@ -1,13 +1,13 @@
 INSERT INTO department (name)
 VALUES
-('A'),
-('B'),
-('C'),
-('D'),
-('E'),
-('F'),
-('F'),
-('H');
+('Department A'),
+('Department B'),
+('Department C'),
+('Department D'),
+('Department E'),
+('Department F'),
+('Department F'),
+('DepartmentH');
 
 INSERT INTO managers (first_name, last_name)
 VALUES

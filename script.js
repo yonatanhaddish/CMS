@@ -39,8 +39,11 @@ const questions= () => {
             getDepartments();
         }
         else if (answer.company === 'Add a department') {
-            console.log("Lets add a new department");
             addDepartment();
+        }
+        else if (answer.company === 'Add a role') {
+            console.log('Lets add a new role');
+            addRole();
         }
     })
     .catch(error => {
@@ -49,7 +52,6 @@ const questions= () => {
         }
         else {
             console.log('Error 02');
-            // getEmployees();
         }
     });
 }
@@ -67,7 +69,6 @@ function getEmployees() {
         else {
             console.log("It was sucessful");
             console.table(rows);
-            // connection.end();
         }
     })
 };
@@ -122,13 +123,48 @@ function addDepartment() {
         db.query(sql, params, (err, result) => {
             if (err) {
                 throw err
-                console.log("Error")
             }
-            console.log("added");
             getDepartments();
         })
-    })
-    
+    })  
+};
+
+function addRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'roleTitle',
+            message: 'Enter Role Title'
+        },
+        {
+            type: 'number',
+            name: 'roleSalary',
+            message: 'Enter a salary'
+        },
+        {
+            type: 'input',
+            name: 'roleDept',
+            message: 'Enter department role'
+        }
+    ])
+    .then((roleAnswer) => {
+        console.log('new role added');
+        console.log(roleAnswer.roleTitle, roleAnswer.roleSalary, roleAnswer.roleDept);
+
+        const sql= `INSERT INTO rolee SET ?`;
+        params= {
+            title: roleAnswer.roleTitle,
+            salary: roleAnswer.roleSalary,
+            department_id: roleAnswer.roleDept
+        };
+
+        db.query(sql, params, (err, result) => {
+            if (err) {
+                throw err
+            }
+            getRoles();
+        });
+    });
 };
 
 questions();
