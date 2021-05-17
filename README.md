@@ -2,6 +2,10 @@
 
 # # CMS
 
+# LINKS 
+https://drive.google.com/file/d/18-TxLusJprLjrjbBIotFfUprxBMdONe3/view
+https://yonatanhaddish.github.io/CMS/
+
 # How to use the program
 
 * * Our main file is located in the root (script.js). Once you are inside the script.js file, initiate the program using "node script.js". Then a list of options will be dispalyed and a user can choose one of the list.
