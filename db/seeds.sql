@@ -7,7 +7,7 @@ VALUES
 ('Department E'),
 ('Department F'),
 ('Department F'),
-('DepartmentH');
+('Department H');
 
 INSERT INTO managers (first_name, last_name)
 VALUES

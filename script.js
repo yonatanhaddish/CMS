@@ -1,10 +1,9 @@
 const fs= require('fs');
 const inquirer= require('inquirer');
 const router = require('./routes/apiRoutes/employee');
-// const getEmployee= require('./routes/apiRoutes');
 const db= require('./db/connection');
 
-
+// HERE WE ARE ASKING THE USER TO CHOOSE ONE OF THE LIST 
 const questions= () => {
     return inquirer.prompt([
         {
@@ -26,24 +25,23 @@ const questions= () => {
         console.log('Questions generated');
         console.log(answer.company);
         if (answer.company === 'View all Employees') {
-            console.log("AAA");
             getEmployees();
             
         }
         else if (answer.company === 'View all roles') {
-            console.log('BBB');
             getRoles();
         }
         else if (answer.company === 'View all departments') {
-            console.log('CCC');
             getDepartments();
         }
         else if (answer.company === 'Add a department') {
             addDepartment();
         }
         else if (answer.company === 'Add a role') {
-            console.log('Lets add a new role');
             addRole();
+        }
+        else if (answer.company === 'Add an Employee') {
+            addEmployee();
         }
     })
     .catch(error => {
@@ -56,6 +54,7 @@ const questions= () => {
     });
 }
 
+// GET EMPLOYEE TABLE
 function getEmployees() {
     sql= `SELECT employee.id, employee.first_name, employee.last_name, rolee.title, rolee.salary, manager_id AS manager_name
         FROM employee
@@ -67,12 +66,12 @@ function getEmployees() {
             throw err
         }
         else {
-            console.log("It was sucessful");
             console.table(rows);
         }
     })
 };
 
+// GET DEPARTMENT TABLE
 function getDepartments() {
     sql= `SELECT department.id AS department_id, department.name AS department_name FROM department`;
 
@@ -81,12 +80,12 @@ function getDepartments() {
             throw err
         }
         else {
-            console.log("Department successful");
             console.table(rows);
         }
     });
 };
 
+// GET ROLE TABLE
 function getRoles() {
     sql= `SELECT rolee.id AS role_id, rolee.title AS job_tilte, rolee.salary AS job_salary, department.name
         AS department_name
@@ -105,6 +104,7 @@ function getRoles() {
     });
 };
 
+// ADD DATA INTO DEPARTMENT TABLE
 function addDepartment() {
         inquirer.prompt([
         {
@@ -114,7 +114,6 @@ function addDepartment() {
         }
     ])
     .then((deptAnswer) => {
-        console.log("new department added");
         console.log(deptAnswer.deptName);
 
         const sql= `INSERT INTO department SET ?`;
@@ -129,6 +128,7 @@ function addDepartment() {
     })  
 };
 
+// ADD DATA INOT ROLE TABLE
 function addRole() {
     inquirer.prompt([
         {
@@ -139,7 +139,7 @@ function addRole() {
         {
             type: 'number',
             name: 'roleSalary',
-            message: 'Enter a salary'
+            message: 'Enter a salary and MUST BE NUMBER'
         },
         {
             type: 'input',
@@ -148,7 +148,6 @@ function addRole() {
         }
     ])
     .then((roleAnswer) => {
-        console.log('new role added');
         console.log(roleAnswer.roleTitle, roleAnswer.roleSalary, roleAnswer.roleDept);
 
         const sql= `INSERT INTO rolee SET ?`;
@@ -164,6 +163,51 @@ function addRole() {
             }
             getRoles();
         });
+    });
+};
+
+// ADD DATA INTO EMPLOYEE TABLE
+function addEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'empFirstName',
+            message: 'Enter First name'
+        },
+        {
+            type: 'input',
+            name: 'empLastName',
+            message: 'Enter Last name'
+        },
+        {
+            type: 'number',
+            name: 'empRoleId',
+            message: 'Enter Role id number'
+        },
+        {
+            type: 'number',
+            name: 'empManagerId',
+            message: 'Enter Manager id number'
+        }
+    ])
+    .then((empAnswer) => {
+        console.log('new employee added');
+        console.log(empAnswer.empFirstName, empAnswer.empLastName, empAnswer.empRoleId, empAnswer.empManagerId);
+
+        const sql= `INSERT INTO employee SET ?`;
+        params= {
+            first_name: empAnswer.empFirstName,
+            last_name: empAnswer.empLastName,
+            role_id: empAnswer.empRoleId,
+            manager_id: empAnswer.empManagerId
+        };
+
+        db.query(sql, params, (err, result) => {
+            if (err) {
+                throw err
+            }
+            getEmployees();
+        })
     });
 };
 
